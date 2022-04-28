@@ -15,14 +15,14 @@ class Node{
 }
 class BinarySearchTree {
   constructor(){
-    this.root = null;//ссылка на корень - является пустой
+    this.base = null;//ссылка на корень - является пустой
   }
   root() {
-    return this.root;
+    return this.base;
   }
 
   add(value) {
-    this.root = addWithin(this.root , value);//положить в корень то, что вернет функция 
+    this.base = addWithin(this.base , value);//положить в корень то, что вернет функция 
 
     function addWithin(node, value){
      if(!node){//если узла нет
@@ -41,7 +41,7 @@ class BinarySearchTree {
   }
 
   has(value) {
-    return searchWithin(this.root, value);
+    return searchWithin(this.base, value);
 
     function searchWithin(node, value){
       if(!node){// если узла нет
@@ -50,21 +50,29 @@ class BinarySearchTree {
       if (node.value === value){// если мы нашли нужное значение
         return true;
       }
-      if(value < node.value) {// если узел есть но значение в узле меньше искомого, то
-        return searchWithin(node.left, value) //поищем слева
-      } else {
-        return searchWithin(node.right, value)//иначе поищем справа
-      }
+      return value < node.value ?// если узел есть но значение в узле меньше искомого, то
+         searchWithin(node.left, value): //поищем слева
+         searchWithin(node.right, value)//иначе поищем справа
     }
   }
 
-  find(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  find(value) {
+    function searchWithin(node, value){
+      if(!node){// если узла нет
+        return null;
+      }
+      if (node.value === value){// если мы нашли нужное значение
+        return node;
+      }
+      return value < node.value ?// если узел есть но значение в узле меньше искомого, то
+         searchWithin(node.left, value): //поищем слева
+         searchWithin(node.right, value)//иначе поищем справа 
+    }
+    return searchWithin(this.base, value);
   }
 
   remove(value) {
-    this.root = removeNode(this.root, value)// в каком поддереве и с каким значением удалить узел
+    this.base = removeNode(this.base, value)// в каком поддереве и с каким значением удалить узел
     function removeNode(node, value) {
       if(!node){//если нет узла(там бфл null)
         return null;// его и оставляем
@@ -105,11 +113,11 @@ class BinarySearchTree {
   }
 
   min() {
-    if(!this.root){//еcли нет элементов то нет и минимального
+    if(!this.base){//еcли нет элементов то нет и минимального
       return;
     }
 
-    let node = this.root;//корень
+    let node = this.base;//корень
     while(node.left){//есть ли кно нибудь левее(самый маленький)
       node = node.left;//переходим к нему
     }
@@ -117,11 +125,11 @@ class BinarySearchTree {
   }
 
   max() {
-    if(!this.root){//ели нет элементов то нет и минимального
+    if(!this.base){//ели нет элементов то нет и минимального
       return;
     }
 
-    let node = this.root;//корень
+    let node = this.base;//корень
     while(node.right){//есть ли кно нибудь правее(самый большой)
       node = node.right;//переходим к нему
     }
