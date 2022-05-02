@@ -7,8 +7,8 @@ const { NotImplementedError } = require('../extensions/index.js');
 * using Node from extensions
 */
 class Node{
-  constructor(value) {
-    this.value = value;
+  constructor(data) {
+    this.data = data;
     this.left = null;//ссылка на потомок слева
     this.right = null;//ссылка на потомок справа
   }
@@ -21,68 +21,69 @@ class BinarySearchTree {
     return this.base;
   }
 
-  add(value) {
-    this.base = addWithin(this.base , value);//положить в корень то, что вернет функция 
+  add(data) {
+    this.base = addWithin(this.base, data);//положить в корень то, что вернет функция 
 
-    function addWithin(node, value){
+    function addWithin(node, data){
      if(!node){//если узла нет
-       return new Node(value)// добавляем новый узел
+       return new Node(data)// добавляем новый узел
      }  
-     if(node.value === value){//если такой узел уже сущетсвует
+     if(node.data === data){//если такой узел уже сущетсвует
        return node;//возвращаем текущий узел
      }
-     if(value < node.value){//если значение, которое мы ходим добавить меньше текущего
-      node.left = addWithin(node.left, value);//добавляем левый потомок 
+     if(data < node.data){//если значение, которое мы ходим добавить меньше текущего
+      node.left = addWithin(node.left, data);//добавляем левый потомок 
      } else{// иначе
-       node.right = addWithin(node.right, value);//добавляем правый потомок
+       node.right = addWithin(node.right, data);//добавляем правый потомок
      }
      return node;//вернем текущий узел;
     }
   }
 
-  has(value) {
-    return searchWithin(this.base, value);
+  has(data) {
+    return searchWithin(this.base, data);
 
-    function searchWithin(node, value){
+    function searchWithin(node, data){
       if(!node){// если узла нет
         return false;
       }
-      if (node.value === value){// если мы нашли нужное значение
+      if (node.data === data){// если мы нашли нужное значение
         return true;
       }
-      return value < node.value ?// если узел есть но значение в узле меньше искомого, то
-         searchWithin(node.left, value): //поищем слева
-         searchWithin(node.right, value)//иначе поищем справа
+      return data < node.data ?// если узел есть но значение в узле меньше искомого, то
+         searchWithin(node.left, data): //поищем слева
+         searchWithin(node.right, data);//иначе поищем справа
     }
   }
 
-  find(value) {
-    function searchWithin(node, value){
+  find(data) {
+    return findWithin(this.base, data);
+
+    function findWithin(node, data){
       if(!node){// если узла нет
         return null;
       }
-      if (node.value === value){// если мы нашли нужное значение
+      if (node.data === data){// если мы нашли нужное значение
         return node;
       }
-      return value < node.value ?// если узел есть но значение в узле меньше искомого, то
-         searchWithin(node.left, value): //поищем слева
-         searchWithin(node.right, value)//иначе поищем справа 
+      return data < node.data ?// если узел есть но значение в узле меньше искомого, то
+         findWithin(node.left, data): //поищем слева
+         findWithin(node.right, data)//иначе поищем справа 
     }
-    return searchWithin(this.base, value);
   }
 
-  remove(value) {
-    this.base = removeNode(this.base, value)// в каком поддереве и с каким значением удалить узел
-    function removeNode(node, value) {
+  remove(data) {
+    this.base = removeNode(this.base, data)// в каком поддереве и с каким значением удалить узел
+    function removeNode(node, data) {
       if(!node){//если нет узла(там бфл null)
         return null;// его и оставляем
       }
       //определяем в какую сторону идем
-      if(value < node.value){//если искомое значение меньше значения узла, то идем влево
-        node.left = removeNode(node.left, value);//удаляем из левого поддерева искомое value, и кладем оставшееся дерево после удаления на место удаленного узла
+      if(data < node.data){//если искомое значение меньше значения узла, то идем влево
+        node.left = removeNode(node.left, data);//удаляем из левого поддерева искомое data, и кладем оставшееся дерево после удаления на место удаленного узла
         return node;
-      }else if(node.value < value){//если искомое значение больше значения узла аналогично справа
-        node.right = removeNode(node.right, value);
+      }else if(node.data < data){//если искомое значение больше значения узла аналогично справа
+        node.right = removeNode(node.right, data);
         return node;
       }else {
         //значения одинаковые
@@ -104,9 +105,9 @@ class BinarySearchTree {
         while(minFromRight.left){//ищем меньший элемент слева
           minFromRight = minFromRight.left
         }
-        node.value = minFromRight.value;//помещяем его в значение удаляемого узла
+        node.data = minFromRight.data;//помещяем его в значение удаляемого узла
 
-        node.right = removeNode(node.right, minFromRight.value);//удаляем минимальное значение из правого поддерева
+        node.right = removeNode(node.right, minFromRight.data);//удаляем минимальное значение из правого поддерева
         return node;
       }
     }
@@ -121,7 +122,7 @@ class BinarySearchTree {
     while(node.left){//есть ли кно нибудь левее(самый маленький)
       node = node.left;//переходим к нему
     }
-    return node.value;//возвращаем самый маленький элемент
+    return node.data;//возвращаем самый маленький элемент
   }
 
   max() {
@@ -133,7 +134,7 @@ class BinarySearchTree {
     while(node.right){//есть ли кно нибудь правее(самый большой)
       node = node.right;//переходим к нему
     }
-    return node.value;//возвращаем самый ма
+    return node.data;//возвращаем самый ма
   }
 }
 
